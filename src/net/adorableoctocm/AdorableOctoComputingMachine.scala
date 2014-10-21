@@ -28,7 +28,7 @@ import net.adorableoctocm.graphics.Renderer
 object AdorableOctoComputingMachine {
 
   lazy val frame = new MainFrame
-  lazy val startMenu = new StartMenu(toLevelSelectMenu, toSettingsMenu, toHelpMenu, toAboutMenu, sys.exit _)
+  lazy val startMenu = new StartMenu(toLevelSelectMenu, toSettingsMenu, toHelpMenu, toAboutMenu, sys.exit)
   lazy val levelSelectMenu = new LevelSelectMenu(startLevel, toStartMenu)
   lazy val settingsMenu = new SettingsMenu(toStartMenu)
   lazy val helpMenu = new HelpMenu(toStartMenu)
