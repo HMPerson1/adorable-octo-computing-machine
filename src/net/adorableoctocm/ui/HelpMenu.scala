@@ -18,12 +18,17 @@
  */
 package net.adorableoctocm.ui
 
-import scala.swing.{ Component, Swing }
+import scala.swing.{ Action, Button, GridBagPanel, Label, TextArea }
 
 /**
  * A menu that displays information on how to play this game.
  */
-class HelpMenu(onBack: => Unit) extends Component {
+class HelpMenu(onBack: => Unit) extends GridBagPanel {
   // TODO: To be implemented
-  Swing.onEDT(onBack)
+  // TODO: Prettification
+  // TODO: I18N and L10N
+
+  add(new Label("Help"), (0, 0))
+  add(new TextArea("Lots of information."), (0, 1))
+  add(new Button(Action("Back")(onBack)), (0, 2))
 }

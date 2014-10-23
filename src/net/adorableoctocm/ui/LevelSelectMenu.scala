@@ -18,12 +18,17 @@
  */
 package net.adorableoctocm.ui
 
-import scala.swing.{ Component, Swing }
+import scala.swing.{ Action, Button, GridBagPanel, Label }
 
 /**
  * A menu that displays all levels.
  */
-class LevelSelectMenu(onLevelSelect: (Int, Int) => Unit, onBack: => Unit) extends Component {
+class LevelSelectMenu(onLevelSelect: (Int, Int) => Unit, onBack: => Unit) extends GridBagPanel {
   // TODO: To be implemented
-  Swing.onEDT(onLevelSelect(0, 0))
+  // TODO: Prettification
+  // TODO: I18N and L10N
+
+  add(new Label("Level Select"), (0, 0))
+  add(new Button(Action("1-1")(onLevelSelect(0, 0))), (0, 1))
+  add(new Button(Action("Back")(onBack)), (0, 2))
 }
