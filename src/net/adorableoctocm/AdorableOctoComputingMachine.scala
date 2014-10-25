@@ -18,9 +18,10 @@
  */
 package net.adorableoctocm
 
-import scala.swing.MainFrame
-import net.adorableoctocm.ui._
+import scala.swing.{ Container, MainFrame, Swing }
+import scala.swing.event.ContainerEvent
 import net.adorableoctocm.graphics.Renderer
+import net.adorableoctocm.ui._
 
 /**
  * A platformer about an adorable octo computing machine.
@@ -41,12 +42,18 @@ object AdorableOctoComputingMachine {
   def toAboutMenu(): Unit = frame.contents = aboutMenu
 
   def main(args: Array[String]): Unit = {
+    val contentPane = new Container.Wrapper { def peer = frame.peer.getContentPane.asInstanceOf[javax.swing.JComponent] }
+    contentPane.reactions += { case e: ContainerEvent => e.source.repaint }
+
+    frame.preferredSize = Swing.pair2Dimension((1280, 720))
     toStartMenu()
+    frame.centerOnScreen()
     frame.title = "Adorable Octo Computing Machine"
-    frame.visible = true
+    frame.open()
   }
 
   def startLevel(major: Int, minor: Int): Unit = {
     frame.contents = new Renderer
+    // TODO: To be implemented
   }
 }
