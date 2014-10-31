@@ -15,11 +15,4 @@
 		<nature>org.scala-ide.sdt.core.scalanature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src/net/adorableoctocm/graphics/res/README</name>
-			<type>1</type>
-			<location>C:/NathanPC/Programming/Files/Eclipse/workspace/adorable-octo-computing-machine/src/net/adorableoctocm/graphics/res/README.txt</location>
-		</link>
-	</linkedResources>
 </projectDescription>
