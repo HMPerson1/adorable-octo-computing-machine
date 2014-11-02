@@ -20,6 +20,8 @@ package net.adorableoctocm
 
 import scala.swing.{ Container, MainFrame, Swing }
 import scala.swing.event.ContainerEvent
+
+import net.adorableoctocm.engine._
 import net.adorableoctocm.graphics.Renderer
 import net.adorableoctocm.ui._
 
@@ -53,7 +55,10 @@ object AdorableOctoComputingMachine {
   }
 
   def startLevel(major: Int, minor: Int): Unit = {
-    frame.contents = new Renderer
+    val renderer = new Renderer
+    frame.contents = renderer
+    renderer.requestFocusInWindow()
+    new Engine(Input(renderer))
     // TODO: To be implemented
   }
 }
