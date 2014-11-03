@@ -16,9 +16,23 @@
  */
 package net.adorableoctocm
 
+import java.util.prefs.Preferences
+import scala.swing.event.Key
+
 /**
- * Manages the storage and retreival of settings.
+ * Manages the storage and retrieval of settings.
  */
-class Settings {
-  // TODO: To be implemented
+object Settings {
+
+  val Prefs = Preferences.userNodeForPackage(getClass)
+  
+  final val KeyKeyUp = "KEY_UP"
+  final val KeyKeyDown = "KEY_DOWN"
+  final val KeyKeyLeft = "KEY_LEFT"
+  final val KeyKeyRight = "KEY_RIGHT"
+
+  lazy val KeyUp = Key(Prefs.getInt(KeyKeyUp, Key.E.id))
+  lazy val KeyDown = Key(Prefs.getInt(KeyKeyDown, Key.D.id))
+  lazy val KeyLeft = Key(Prefs.getInt(KeyKeyLeft, Key.S.id))
+  lazy val KeyRight = Key(Prefs.getInt(KeyKeyRight, Key.F.id))
 }

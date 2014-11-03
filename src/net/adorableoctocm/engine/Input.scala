@@ -22,6 +22,7 @@ import scala.collection.mutable
 import scala.swing.Component
 import scala.swing.event.{ Key, KeyPressed, KeyReleased }
 
+import net.adorableoctocm.Settings._
 import rx.lang.scala.Observable
 
 /**
@@ -36,19 +37,19 @@ object Input {
       comp.keys.reactions += {
         case e: KeyPressed => {
           e.key match {
-            case Key.E => keys += Up
-            case Key.D => keys += Down
-            case Key.S => keys += Right
-            case Key.F => keys += Left
+            case KeyUp    => keys += Up
+            case KeyDown  => keys += Down
+            case KeyRight => keys += Right
+            case KeyLeft  => keys += Left
           }
           subscriber.onNext(keys.toSet)
         }
         case e: KeyReleased => {
           e.key match {
-            case Key.E => keys -= Up
-            case Key.D => keys -= Down
-            case Key.S => keys -= Right
-            case Key.F => keys -= Left
+            case KeyUp    => keys -= Up
+            case KeyDown  => keys -= Down
+            case KeyRight => keys -= Right
+            case KeyLeft  => keys -= Left
           }
           subscriber.onNext(keys.toSet)
         }
