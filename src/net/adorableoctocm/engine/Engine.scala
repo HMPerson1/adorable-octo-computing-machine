@@ -35,7 +35,7 @@ class Engine(input: Observable[Set[InputEvent]]) {
     // TODO: To be implemented
     println(input)
     null
-  })
+  }).subscribe
 }
 
 object Engine {
