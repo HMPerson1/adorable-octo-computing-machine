@@ -30,8 +30,8 @@ import net.adorableoctocm.ui._
  */
 object AdorableOctoComputingMachine {
 
-  lazy val frame = new MainFrame
-  lazy val startMenu = new StartMenu(toLevelSelectMenu, toSettingsMenu, toHelpMenu, toAboutMenu, sys.exit)
+  lazy val frame = new MainFrame { override def closeOperation(): Unit = { quit() } }
+  lazy val startMenu = new StartMenu(toLevelSelectMenu, toSettingsMenu, toHelpMenu, toAboutMenu, quit)
   lazy val levelSelectMenu = new LevelSelectMenu(startLevel, toStartMenu)
   lazy val settingsMenu = new SettingsMenu(toStartMenu)
   lazy val helpMenu = new HelpMenu(toStartMenu)
@@ -60,5 +60,10 @@ object AdorableOctoComputingMachine {
     renderer.requestFocusInWindow()
     new Engine(Input(renderer))
     // TODO: To be implemented
+  }
+
+  def quit(): Unit = {
+    Settings.save()
+    sys.exit()
   }
 }

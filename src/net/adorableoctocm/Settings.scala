@@ -17,6 +17,7 @@
 package net.adorableoctocm
 
 import java.util.prefs.Preferences
+
 import scala.swing.event.Key
 
 /**
@@ -24,8 +25,8 @@ import scala.swing.event.Key
  */
 object Settings {
 
-  val Prefs = Preferences.userNodeForPackage(getClass)
-  
+  lazy val Prefs = Preferences.userNodeForPackage(getClass)
+
   final val KeyKeyUp = "KEY_UP"
   final val KeyKeyDown = "KEY_DOWN"
   final val KeyKeyLeft = "KEY_LEFT"
@@ -35,4 +36,14 @@ object Settings {
   lazy val KeyDown = Key(Prefs.getInt(KeyKeyDown, Key.D.id))
   lazy val KeyLeft = Key(Prefs.getInt(KeyKeyLeft, Key.S.id))
   lazy val KeyRight = Key(Prefs.getInt(KeyKeyRight, Key.F.id))
+
+  def save(): Unit = {
+
+    Prefs.putInt(KeyKeyUp, KeyUp.id)
+    Prefs.putInt(KeyKeyDown, KeyDown.id)
+    Prefs.putInt(KeyKeyLeft, KeyLeft.id)
+    Prefs.putInt(KeyKeyRight, KeyRight.id)
+
+    Prefs.flush()
+  }
 }
