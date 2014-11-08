@@ -30,7 +30,7 @@ import rx.lang.scala.Observable
 class Engine(input: Observable[InputEvents], renderer: (State => Unit)) {
   import Engine._
 
-  input.compose(sampleOnEvery(Observable.interval(Period))(Set())).scan(State())(tick).subscribe(renderer)
+  input.compose(sampleOnEvery[InputEvents](Observable.interval(Period))(Set())).scan(State())(tick).subscribe(renderer)
 
   def tick(prev: State, input: InputEvents): State = {
     // TODO: To be implemented

@@ -63,6 +63,6 @@ object Input {
  */
 object InputEvent extends Enumeration {
   type InputEvent = Value
-  type InputEvents = Set[_ <: InputEvent]
+  type InputEvents = Set[InputEvent]
   val Up, Down, Left, Right = Value
 }
