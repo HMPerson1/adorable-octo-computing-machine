@@ -16,33 +16,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package net.adorableoctocm.graphics
-
-import java.awt.Color
-import java.awt.image.BufferedImage
-
-import scala.swing.{ Component, Graphics2D }
-
-import net.adorableoctocm.State
+package net.adorableoctocm
 
 /**
- * Renders the game onto the screen.
+ * Stores state information
  */
-class Renderer extends Component {
-  override def paint(g: Graphics2D): Unit = {
-    repaint()
+class State {
 
-    g.drawImage(frame, 0, 0, null)
+}
 
-    g.setFont(font.deriveFont(20.0f))
-    g.drawString("NOT YET IMPLEMENTED", (size.width - 234) / 2.0f, 30.107422f)
-  }
-
-  private lazy val frame = new BufferedImage(size.width, size.height, BufferedImage.TYPE_INT_ARGB)
-  def onUpdate(s: State): Unit = {
-    // TODO: To be implemented
-    val g = frame.createGraphics()
-    g.setBackground(Color.CYAN)
-    g.clearRect(0, 0, frame.getWidth, frame.getHeight)
+object State {
+  def apply() = {
+    new State()
   }
 }

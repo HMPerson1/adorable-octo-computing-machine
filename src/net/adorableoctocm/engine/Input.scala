@@ -31,7 +31,7 @@ import rx.lang.scala.Observable
 object Input {
   import InputEvent._
 
-  def apply(comp: Component): Observable[Set[InputEvent]] = {
+  def apply(comp: Component): Observable[InputEvents] = {
     Observable(subscriber => {
       val keys = mutable.Set[InputEvent]()
       comp.keys.reactions += {
@@ -63,5 +63,6 @@ object Input {
  */
 object InputEvent extends Enumeration {
   type InputEvent = Value
+  type InputEvents = Set[_ <: InputEvent]
   val Up, Down, Left, Right = Value
 }

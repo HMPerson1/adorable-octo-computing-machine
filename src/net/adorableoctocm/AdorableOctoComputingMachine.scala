@@ -18,7 +18,8 @@
  */
 package net.adorableoctocm
 
-import scala.swing.{ Container, MainFrame, Swing }
+import scala.swing.{ Container, MainFrame }
+import scala.swing.Swing.pair2Dimension
 import scala.swing.event.ContainerEvent
 
 import net.adorableoctocm.engine._
@@ -30,7 +31,7 @@ import net.adorableoctocm.ui._
  */
 object AdorableOctoComputingMachine {
 
-  lazy val frame = new MainFrame { override def closeOperation(): Unit = { quit() } }
+  lazy val frame = new MainFrame { override def closeOperation = quit }
   lazy val startMenu = new StartMenu(toLevelSelectMenu, toSettingsMenu, toHelpMenu, toAboutMenu, quit)
   lazy val levelSelectMenu = new LevelSelectMenu(startLevel, toStartMenu)
   lazy val settingsMenu = new SettingsMenu(toStartMenu)
@@ -47,7 +48,7 @@ object AdorableOctoComputingMachine {
     val contentPane = new Container.Wrapper { def peer = frame.peer.getContentPane.asInstanceOf[javax.swing.JComponent] }
     contentPane.reactions += { case e: ContainerEvent => e.source.repaint }
 
-    frame.preferredSize = Swing.pair2Dimension((1280, 720))
+    frame.preferredSize = (1280, 720)
     toStartMenu()
     frame.centerOnScreen()
     frame.title = "Adorable Octo Computing Machine"
@@ -58,7 +59,7 @@ object AdorableOctoComputingMachine {
     val renderer = new Renderer
     frame.contents = renderer
     renderer.requestFocusInWindow()
-    new Engine(Input(renderer))
+    new Engine(Input(renderer), renderer.onUpdate)
     // TODO: To be implemented
   }
 

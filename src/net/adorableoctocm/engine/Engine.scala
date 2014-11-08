@@ -20,22 +20,23 @@ package net.adorableoctocm.engine
 
 import scala.concurrent.duration.DurationInt
 
-import InputEvent.InputEvent
+import InputEvent.InputEvents
+import net.adorableoctocm.State
 import rx.lang.scala.Observable
 
 /**
  * The game engine.
  */
-class Engine(input: Observable[Set[InputEvent]]) {
+class Engine(input: Observable[InputEvents], renderer: (State => Unit)) {
   import Engine._
 
-  val tick = Observable.interval(Period)
+  input.compose(sampleOnEvery(Observable.interval(Period))(Set())).scan(State())(tick).subscribe(renderer)
 
-  input.compose(sampleOnEvery(tick)(Set())).foldLeft(null)((prev, input) => {
+  def tick(prev: State, input: InputEvents): State = {
     // TODO: To be implemented
     println(input)
-    null
-  }).subscribe
+    State()
+  }
 }
 
 object Engine {
