@@ -16,3 +16,4 @@ project/plugins/project/
 .cache
 .scala_dependencies
 .worksheet
+bin/
