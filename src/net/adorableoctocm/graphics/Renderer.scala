@@ -44,5 +44,13 @@ class Renderer extends Component {
     val g = frame.createGraphics()
     g.setBackground(Color.CYAN)
     g.clearRect(0, 0, frame.getWidth, frame.getHeight)
+
+    g.setPaint(Color.WHITE)
+    g.setFont(font.deriveFont(15.0f))
+    g.drawString(s"(${s.posx}, ${s.posy})", 20, 20)
+    g.drawString(s"(${s.velx}, ${s.vely})", 20, 40)
+    g.drawLine(0, 500, frame.getWidth, 500)
+    g.drawLine(200, 0, 200, frame.getHeight)
+    g.fillOval(200 + s.posx * 8 - 25, 500 - s.posy * 8 - 25, 50, 50)
   }
 }

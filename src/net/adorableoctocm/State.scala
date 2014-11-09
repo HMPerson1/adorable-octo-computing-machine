@@ -21,12 +21,17 @@ package net.adorableoctocm
 /**
  * Stores state information
  */
-class State {
-
+class State(
+    val posx: Int,
+    val posy: Int,
+    val velx: Int,
+    val vely: Int,
+    val facing: Boolean) {
 }
 
 object State {
-  def apply() = {
-    new State()
-  }
+  def apply(): State =
+    new State(0, 0, 0, 0, false)
+  def apply(s: State)(posx: Int = s.posx, posy: Int = s.posy, velx: Int = s.velx, vely: Int = s.vely, facing: Boolean = s.facing): State =
+    new State(posx, posy, velx, vely, facing)
 }

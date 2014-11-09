@@ -20,7 +20,7 @@ package net.adorableoctocm.engine
 
 import scala.concurrent.duration.DurationInt
 
-import InputEvent.InputEvents
+import InputEvent._
 import net.adorableoctocm.State
 import rx.lang.scala.Observable
 
@@ -32,10 +32,27 @@ class Engine(input: Observable[InputEvents], renderer: (State => Unit)) {
 
   input.compose(sampleOnEvery[InputEvents](Observable.interval(Period))(Set())).scan(State())(tick).subscribe(renderer)
 
-  def tick(prev: State, input: InputEvents): State = {
-    // TODO: To be implemented
-    println(input)
-    State()
+  private def tick(prev: State, input: InputEvents): State = {
+    val jump = (s: State) => {
+      // TODO: To be implemented
+      if (input(Up)) State(s)(vely = 5) else s
+    }
+    val walk = (s: State) => {
+      if (input(Left) ^ input(Right)) {
+        if (input(Left)) State(s)(velx = -2, facing = false) else State(s)(velx = 2, facing = true)
+      } else State(s)(velx = 0)
+    }
+    val collide = (s: State) => {
+      // TODO: To be implemented
+      State(s)(
+        velx = if (s.posx + s.velx <= 0) 0 - s.posx else s.velx,
+        vely = if (s.posy + s.vely <= 0) 0 - s.posy else s.vely
+      )
+    }
+    val physics = (s: State) => {
+      State(s)(posx = s.posx + s.velx, posy = s.posy + s.vely, vely = s.vely - 1)
+    }
+    jump andThen walk andThen collide andThen physics apply prev
   }
 }
 
