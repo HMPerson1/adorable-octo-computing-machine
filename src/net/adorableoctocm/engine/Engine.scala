@@ -18,6 +18,7 @@
  */
 package net.adorableoctocm.engine
 
+import scala.IndexedSeq
 import scala.concurrent.duration.DurationInt
 
 import InputEvent._
@@ -30,23 +31,59 @@ import rx.lang.scala.Observable
 class Engine(input: Observable[InputEvents], renderer: (State => Unit)) {
   import Engine._
 
-  input.compose(sampleOnEvery[InputEvents](Observable.interval(Period))(Set())).scan(State())(tick).subscribe(renderer)
+  val tmpLevel = IndexedSeq[Int](0xffffffff, 0x80100001, 0x80100007, 0x80100001, 0x80900001, 0x80900001, 0x80000001, 0x80000001, 0xffffffff).map(int => (0 to 31).map(idx => ((int >> idx) & 1) == 1))
+  input.compose(sampleOnEvery[InputEvents](Observable.interval(Period))(Set())).scan(State(State())(posx = 16, posy = 16, blocks = tmpLevel))(tick).subscribe(renderer)
 
   private def tick(prev: State, input: InputEvents): State = {
     val jump = (s: State) => {
       // TODO: To be implemented
-      if (input(Up)) State(s)(vely = 5) else s
+      if (input(Up)) State(s)(vely = JumpVel) else s
     }
     val walk = (s: State) => {
       if (input(Left) ^ input(Right)) {
-        if (input(Left)) State(s)(velx = -2, facing = false) else State(s)(velx = 2, facing = true)
+        if (input(Left)) State(s)(velx = -WalkVel, facing = false) else State(s)(velx = WalkVel, facing = true)
       } else State(s)(velx = 0)
     }
     val collide = (s: State) => {
-      // TODO: To be implemented
+      val bx = s.posx
+      val by = s.posy
+      val tx = bx + BlockSize - 1
+      val ty = by + BlockSize * 2 - 1
+      val bxi = bx / BlockSize
+      val byi = by / BlockSize
+      val txi = tx / BlockSize
+      val tyi = ty / BlockSize
+
+      var vx = if (bx + s.velx <= 0) 0 - bx else s.velx
+      var vy = if (by + s.vely <= 0) 0 - by else s.vely
+
+      val columns = s.blocks.slice(bxi, txi + 1)
+      if (vy < 0) {
+        val below = columns.map(_.lastIndexOf(true, byi - 1)).max
+        val floor = (below + 1) * 16
+        vy = if (by + s.vely <= floor) floor - by else vy
+      }
+      if (vy > 0) {
+        val above = columns.map(_.indexOf(true, tyi + 1)).min
+        val ceil = above * 16
+        vy = if (ty + s.vely >= ceil) ceil - ty - 1 else vy
+      }
+
+      val rows = s.blocks.transpose.slice(byi, tyi + 1)
+      if (vx < 0) {
+        val left = rows.map(_.lastIndexOf(true, bxi - 1)).max
+        val lwall = (left + 1) * 16
+        vx = if (bx + s.velx <= lwall) lwall - bx else vx
+      }
+      if (vx > 0) {
+        val right = rows.map(_.indexOf(true, txi + 1)).min
+        val rwall = right * 16
+        vx = if (tx + s.velx >= rwall) rwall - tx - 1 else vx
+      }
+
       State(s)(
-        velx = if (s.posx + s.velx <= 0) 0 - s.posx else s.velx,
-        vely = if (s.posy + s.vely <= 0) 0 - s.posy else s.vely
+        velx = vx,
+        vely = vy
       )
     }
     val physics = (s: State) => {
@@ -58,7 +95,10 @@ class Engine(input: Observable[InputEvents], renderer: (State => Unit)) {
 
 object Engine {
 
-  val Period = 50 millis
+  val Period = 20 millis
+  val JumpVel = 6
+  val WalkVel = 2
+  val BlockSize = 16
 
   def sampleOnEvery[T](sampler: Observable[_])(default: T)(o: Observable[T]): Observable[T] = {
     val lock = new AnyRef

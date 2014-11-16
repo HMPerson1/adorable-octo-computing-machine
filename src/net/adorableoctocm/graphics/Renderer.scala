@@ -19,6 +19,7 @@
 package net.adorableoctocm.graphics
 
 import java.awt.Color
+import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
 
 import scala.swing.{ Component, Graphics2D }
@@ -42,15 +43,27 @@ class Renderer extends Component {
   def onUpdate(s: State): Unit = {
     // TODO: To be implemented
     val g = frame.createGraphics()
-    g.setBackground(Color.CYAN)
+    g.setBackground(Color.GRAY)
     g.clearRect(0, 0, frame.getWidth, frame.getHeight)
 
-    g.setPaint(Color.WHITE)
+    g.setPaint(Color.RED)
     g.setFont(font.deriveFont(15.0f))
     g.drawString(s"(${s.posx}, ${s.posy})", 20, 20)
     g.drawString(s"(${s.velx}, ${s.vely})", 20, 40)
-    g.drawLine(0, 500, frame.getWidth, 500)
-    g.drawLine(200, 0, 200, frame.getHeight)
-    g.fillOval(200 + s.posx * 8 - 25, 500 - s.posy * 8 - 25, 50, 50)
+
+    val af = AffineTransform.getScaleInstance(1, -1)
+    af.translate(0, -frame.getHeight + 1)
+    g.transform(af)
+
+    g.setPaint(Color.WHITE)
+    g.fillOval(s.posx, s.posy, 16, 32)
+
+    s.blocks.zipWithIndex.foreach {
+      case (seq, x) => seq.zipWithIndex.foreach {
+        case (exists, y) => {
+          if (exists) g.drawRect(x * 16, y * 16, 16, 16)
+        }
+      }
+    }
   }
 }

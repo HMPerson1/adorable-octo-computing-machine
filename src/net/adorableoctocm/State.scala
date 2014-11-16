@@ -26,12 +26,13 @@ class State(
     val posy: Int,
     val velx: Int,
     val vely: Int,
-    val facing: Boolean) {
+    val facing: Boolean,
+    val blocks: Seq[Seq[Boolean]]) {
 }
 
 object State {
   def apply(): State =
-    new State(0, 0, 0, 0, false)
-  def apply(s: State)(posx: Int = s.posx, posy: Int = s.posy, velx: Int = s.velx, vely: Int = s.vely, facing: Boolean = s.facing): State =
-    new State(posx, posy, velx, vely, facing)
+    new State(0, 0, 0, 0, false, Seq())
+  def apply(s: State)(posx: Int = s.posx, posy: Int = s.posy, velx: Int = s.velx, vely: Int = s.vely, facing: Boolean = s.facing, blocks: Seq[Seq[Boolean]] = s.blocks): State =
+    new State(posx, posy, velx, vely, facing, blocks)
 }
