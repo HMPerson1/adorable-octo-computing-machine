@@ -31,13 +31,20 @@ import rx.lang.scala.Observable
 class Engine(input: Observable[InputEvents], renderer: (State => Unit)) {
   import Engine._
 
-  val tmpLevel = IndexedSeq[Int](0xffffffff, 0x80100001, 0x80100007, 0x80100001, 0x80900001, 0x80900001, 0x80000001, 0x80000001, 0xffffffff).map(int => (0 to 31).map(idx => ((int >> idx) & 1) == 1))
+  val tmpLevel = IndexedSeq[Int](0xffffffff, 0x80100001, 0x80100003, 0x80100007, 0x8090000f, 0x80900007, 0x80000003, 0x80000001, 0xffffffff).map(int => (0 to 31).map(idx => ((int >> idx) & 1) == 1))
   input.compose(sampleOnEvery[InputEvents](Observable.interval(Period))(Set())).scan(State(State())(posx = 16, posy = 16, blocks = tmpLevel))(tick).subscribe(renderer)
 
   private def tick(prev: State, input: InputEvents): State = {
     val jump = (s: State) => {
-      // TODO: To be implemented
-      if (input(Up)) State(s)(vely = JumpVel) else s
+      if (input(Up)) {
+        val x = s.posx
+        val y = s.posy
+
+        val columns = s.blocks.slice(x / BlockSize, (x - 1) / BlockSize + 2)
+        if (y % 16 == 0 && columns.map(_(y / BlockSize - 1)).contains(true)) {
+          State(s)(vely = JumpVel)
+        } else s
+      } else s
     }
     val walk = (s: State) => {
       if (input(Left) ^ input(Right)) {
