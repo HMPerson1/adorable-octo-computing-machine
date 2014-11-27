@@ -76,7 +76,7 @@ class Engine(input: Observable[InputEvents], renderer: (State => Unit)) {
         vy = if (ty + s.vely >= ceil) ceil - ty - 1 else vy
       }
 
-      val rows = s.blocks.transpose.slice((by + vy) / BlockSize, (ty + vy) / BlockSize + 1)
+      val rows = s.blocks.transpose.slice(byi, tyi + 1)
       if (vx < 0) {
         val left = rows.map(_.lastIndexOf(true, bxi - 1)).max
         val lwall = (left + 1) * 16
